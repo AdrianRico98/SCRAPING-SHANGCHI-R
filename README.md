@@ -42,7 +42,7 @@ ejecutable en cualquier momento sobre la web y unifico las tablas.
 3: Guardo el resultado final en el directorio de trabajo en formato
 xlsx.
 
-Nota\*: existe una “quinta parte” que consiste en crear en el
+Nota\*: existe una “cuarta parte” que consiste en crear en el
 programador de tareas de windows la ejecución diaria del script, para
 tener siempre en el directorio de trabajo la versión actualizada del
 rendimiento que esta teniendo la película.
