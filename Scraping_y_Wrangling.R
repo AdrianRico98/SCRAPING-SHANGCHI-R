@@ -1,15 +1,15 @@
-#1. Cargolas librerias que vamos a utilizar.
+#1. Cargo las librerias que vamos a utilizar.
 library(rvest)
 library(stringr)
 library(tidyverse)
 library(openxlsx)
 
-#2. #Leo el c骴igo html de la p醙ina, extraigo las distintas tablas y las convierto en dataframes. 
+#2. #Leo el c贸digo html de la p谩gina, extraigo las distintas tablas y las convierto en dataframes. 
 link <- "https://www.boxofficemojo.com/title/tt9376612/?ref_=bo_se_r_1"
 page <- read_html(link)
 tables <- page %>% html_nodes("table")
 table <- tables[[1]] %>% html_table() #extraemos la primera tabla.
-##Ya que debo extraer las cuatro tablas, creo una funci髇 que haga mas eficiente el proceso de extracci髇. LLamo a la funci髇 "scraping".
+##Ya que debo extraer las cuatro tablas, creo una funci贸n que haga mas eficiente el proceso de extracci贸n. LLamo a la funci贸n "scraping".
 scraping <- function(n){
   link <- "https://www.boxofficemojo.com/title/tt9376612/?ref_=bo_se_r_1"
   page <- read_html(link)
@@ -17,14 +17,14 @@ scraping <- function(n){
   table <- tables[[n]] %>% html_table()
   table
 }
-mercado_domestico <- scraping(1) #generola tabla con el mercado dom閟tico.
+mercado_domestico <- scraping(1) #genero la tabla con el mercado dom茅stico.
 europa_africa <- scraping(2) #genero la tabla con el mercado europeo y africano.
 america_latina <- scraping(3) #genero la tabla con el mercado latinoamericano.
-asia_pacific <- scraping(4) #genero la tabla con el mercado asiatico y del pac韋ico.
+asia_pacific <- scraping(4) #genero la tabla con el mercado asiatico y del pac铆fico.
 
 #3. Procedo a limpiar las tablas y crear la tabla final.
 ##Todas las tablas presentan el mismo formato y los cambios que debo hacer son:
-### 3.1 A馻dir una variable denominada "region" donde se muestre la regi髇 de cada pa韘 o mercado en todas las tablas.
+### 3.1 A帽adir una variable denominada "region" donde se muestre la regi贸n de cada pa铆s o mercado en todas las tablas.
 america_latina <- america_latina %>% 
   mutate(Region = rep("America Latina", each= nrow(america_latina))) %>%
   select(Region,Area,`Release Date`,Opening,Gross)
@@ -46,7 +46,7 @@ america_latina <- america_latina %>% mutate(`Release Date`= america_latina$`Rele
 asia_pacific <- asia_pacific %>% mutate(`Release Date` = asia_pacific$`Release Date`%>% mdy())
 europa_africa <- europa_africa %>% mutate(`Release Date` = europa_africa$`Release Date` %>% mdy())
 mercado_domestico <- mercado_domestico %>% mutate(`Release Date` = mercado_domestico$`Release Date` %>% mdy())
-### 3.3 Elimino el d髄ar con la expresi髇 regular y formateo los n鷐eros para que puedan ser utilizados por el programa.
+### 3.3 Elimino el d贸lar con la expresi贸n regular y formateo los n煤meros para que puedan ser utilizados por el programa.
 patron <- "^\\$"
 america_latina <- america_latina %>% mutate(Opening = america_latina$Opening %>% str_remove_all(patron) %>% parse_number(),
                                             Gross = america_latina$Gross %>% str_remove_all(patron) %>% parse_number())
@@ -69,7 +69,7 @@ europa_africa <- europa_africa %>% set_names(nombres)
 mercado_domestico <- mercado_domestico %>% set_names(nombres)
 shang_chi <- union(america_latina,asia_pacific) %>% union(europa_africa) %>% union(mercado_domestico)
 
-#4. Exporto la tabla final a un excel que se va ejecutando peri骴icamente gracias al programador de tareas de windows.
+#4. Exporto la tabla final a un excel que se va ejecutando peri贸dicamente gracias al programador de tareas de windows.
 write.xlsx(shang_chi,"shang_chi.xlsx", asTable = TRUE, overwrite = TRUE) 
 
 
