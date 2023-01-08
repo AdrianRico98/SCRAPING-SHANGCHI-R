@@ -9,18 +9,19 @@ link <- "https://www.boxofficemojo.com/title/tt9376612/?ref_=bo_se_r_1"
 page <- read_html(link)
 tables <- page %>% html_nodes("table")
 table <- tables[[1]] %>% html_table() #extraemos la primera tabla.
-##Ya que debo extraer las cuatro tablas, creo una función que haga mas eficiente el proceso de extracción. LLamo a la función "scraping".
-scraping <- function(n){
-  link <- "https://www.boxofficemojo.com/title/tt9376612/?ref_=bo_se_r_1"
-  page <- read_html(link)
-  tables <- page %>% html_nodes("table")
-  table <- tables[[n]] %>% html_table()
-  table
+##Ya que debo extraer las cuatro tablas, hago un bucle que las cree y las agrupe en una lista
+tables_list <- list()
+
+for (i in 1:length(tables)){
+  table <- tables[[i]] %>% html_table()
+  tables_list[[i]] <- table
 }
-mercado_domestico <- scraping(1) #genero la tabla con el mercado doméstico.
-europa_africa <- scraping(2) #genero la tabla con el mercado europeo y africano.
-america_latina <- scraping(3) #genero la tabla con el mercado latinoamericano.
-asia_pacific <- scraping(4) #genero la tabla con el mercado asiatico y del pacífico.
+
+assign("mercado_domestico", tables_list[[1]])
+assign("europa_africa", tables_list[[2]])
+assign("america_latina", tables_list[[3]])
+assign("asia_pacific", tables_list[[4]])
+
 
 #3. Procedo a limpiar las tablas y crear la tabla final.
 ##Todas las tablas presentan el mismo formato y los cambios que debo hacer son:
