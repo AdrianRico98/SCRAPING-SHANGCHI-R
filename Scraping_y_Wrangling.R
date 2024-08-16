@@ -26,22 +26,20 @@ assign("asia_pacific", tables_list[[4]])
 #3. Procedo a limpiar las tablas y crear la tabla final.
 ##Todas las tablas presentan el mismo formato y los cambios que debo hacer son:
 ### 3.1 Añadir una variable denominada "region" donde se muestre la región de cada país o mercado en todas las tablas.
-america_latina <- america_latina %>% 
-  mutate(Region = rep("America Latina", each= nrow(america_latina))) %>%
-  select(Region,Area,`Release Date`,Opening,Gross)
+preprocesamiento <- function(data){
+  #nombre del dataframe
+  nombre <- deparse(substitute(data))
+  #procesado
+  data <- data %>%
+    mutate(Region = rep(nombre, each= nrow(data))) %>%
+    select(Region,Area,`Release Date`,Opening,Gross)
+}
 
-asia_pacific <- asia_pacific %>%
-  mutate(Region = rep("Asia Pacific", each= nrow(asia_pacific))) %>%
-  select(Region,Area,`Release Date`,Opening,Gross)
+america_latina <- preprocesamiento(america_latina)
+mercado_domestico <- preprocesamiento(mercado_domestico)
+europa_africa <- preprocesamiento(europa_africa)
+asia_pacific <- preprocesamiento(asia_pacific)
 
-
-europa_africa <- europa_africa %>%
-  mutate(Region = rep("Europa/Africa", each= nrow(europa_africa))) %>%
-  select(Region,Area,`Release Date`,Opening,Gross)
-
-mercado_domestico <- mercado_domestico %>%
-  mutate(Region = rep("Mercado domestico", each= nrow(mercado_domestico))) %>%
-  select(Region,Area,`Release Date`,Opening,Gross)
 ### 3.2 Formatear la fecha correctamente con lubridate.
 america_latina <- america_latina %>% mutate(`Release Date`= america_latina$`Release Date` %>% mdy())
 asia_pacific <- asia_pacific %>% mutate(`Release Date` = asia_pacific$`Release Date`%>% mdy())
